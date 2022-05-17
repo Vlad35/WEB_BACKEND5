@@ -109,12 +109,29 @@
         setcookie('uLim_value', $_POST['uLim'], time() + 30 * 24 * 60 * 60);
         setcookie('uBio_value', $_POST['uBio'], time() + 30 * 24 * 60 * 60);
 	}
+    $servername = '212.192.134.20';
+    $username = 'u47684';
+    $password = '8848410';
+    $dbname = 'uData';
     if (!empty($_COOKIE[session_name()]) && session_start() && !empty($_SESSION['login'])) {
+        $conn = new mysqli($servername, $username, $password, $dbname);
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
         $sql = "UPDATE uData SET Email =  $_POST['uMail'],Birthdate = $_POST['uDate'],Gender =
         $_POST['uGen'],Limbs = $_POST['uLim'],Bio = $_POST['uBio']   WHERE name = $_SESSION['login']";
+        if ($conn->query($sql) === TRUE) {
+            echo "Record updated successfully";
+        } else {
+            echo "Error updating record: " . $conn->error;
+        }
+        
+        $conn->close();
     // TODO: перезаписать данные в БД новыми данными,
     // кроме логина и пароля.
     } else {
+        $login = '123';
         // Генерируем уникальный логин и пароль.
         // TODO: сделать механизм генерации, например функциями rand(), uniquid(), md5(), substr().
         $login = substr(md5($login), a, f);
